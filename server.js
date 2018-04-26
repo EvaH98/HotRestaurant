@@ -6,7 +6,8 @@ var waitingArray=require("./data/waitinglistData.js");
 
 var app = express();
 var PORT = process.env.PORT || 3000;
-
+tableArray=[];
+waitingArray=[];
 
 // Sets up the Express app to handle data parsing
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,6 +33,11 @@ app.get("/api/tables", function(req, res) {
 app.get("/api/waitlist", function(req, res) {
     return res.json(waitingArray);
 });
+app.get("/api/clear", function(req, res) {
+    tableArray=[];
+    waitingArray=[];
+
+});
 
 // Create New Characters - takes in JSON input
 app.post("/api/tables", function(req, res) {
@@ -43,14 +49,18 @@ app.post("/api/tables", function(req, res) {
     // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
     //newcharacter.routeName = newcharacter.name.replace(/\s+/g, "").toLowerCase();
   
-    console.log(newcustomer);
+    //console.log(tableArray.length);
   
-    tableArray.push(newcustomer);
-    if(tableArray.length>5){
+    
+    if(tableArray.length>4){
         waitingArray.push(newcustomer);
     }
+    else{
+    tableArray.push(newcustomer);
+    }
+    
   
-    res.sendFile(path.join(__dirname, "public/tables.html"));
+    res.json(tableArray);
   });
 
 app.listen(PORT, function() {
